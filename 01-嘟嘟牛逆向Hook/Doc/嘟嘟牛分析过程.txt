@@ -1,0 +1,96 @@
+[嘟嘟牛Hook逆向分析]
+
+[✔] 搜索user/login
+
+    private void requestNetwork(final String cmd, Map<String, String> para2, Type type) {
+        showProgress();
+        this.request = new JsonRequest(this, "http://api.dodovip.com/api/" + cmd, "", new Response.Listener<RequestResult>() {
+            public void onResponse(RequestResult requestResult) {
+                if (!requestResult.code.equals(a.e)) {
+                    LoginActivity.this.showToast(requestResult.message);
+                } else if (cmd.equals("user/login")) {
+                    DodonewOnlineApplication.loginUser = (User) requestResult.data;
+                    DodonewOnlineApplication.loginLabel = "mobile";
+                    Utils.saveJson(LoginActivity.this, DodonewOnlineApplication.loginLabel, Config.LOGINLABEL_JSON);
+                    LoginActivity.this.intentMainActivity();
+                }
+                LoginActivity.this.dissProgress();
+            }
+        }, this, type);
+        this.request.【addRequestMap(para2, 0)】;
+        DodonewOnlineApplication.addRequest(this.request, this);
+    }
+	
+[✔] 找到加密关键位置
+
+    public void addRequestMap(Map<String, String> addMap, int a) {
+        String time = System.currentTimeMillis() + "";
+        if (addMap == null) {
+            addMap = new HashMap<>();
+        }
+        addMap.put("timeStamp", time);
+        String encrypt = RequestUtil.【encodeDesMap】(RequestUtil.paraMap(addMap, Config.BASE_APPEND, "sign"), this.desKey, this.desIV);
+        try {
+            new JSONObject().put("Encrypt", encrypt);
+            this.mRequestBody = obj + "";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+[✔] 加密函数
+
+    public static String encodeDesMap(String data, String desKey, String desIV) {
+        try {
+            return new DesSecurity(desKey, desIV).encrypt64(data.getBytes("UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static Map<String, String> encodeDesMap(String data, String mpKey, String desKey, String desIV) {
+        Map<String, String> map = new HashMap<>();
+        try {
+            map.put(mpKey, new DesSecurity(desKey, desIV).encrypt64(data.getBytes()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+[✔] 加密函数详情 md5 key值 des加密 PKCS5Padding
+
+public class DesSecurity {
+    Cipher deCipher;
+    Cipher enCipher;
+
+    public DesSecurity(String key, String iv) throws Exception {
+        if (key == null) {
+            throw new NullPointerException("Parameter is null!");
+        }
+        【InitCipher】(key.getBytes(), iv.getBytes());
+    }
+
+    private void InitCipher(byte[] secKey, byte[] secIv) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(secKey);
+        【SecretKey key = SecretKeyFactory.getInstance("DES").generateSecret(new DESKeySpec(md.digest()));】
+        AlgorithmParameterSpec paramSpec = new IvParameterSpec(secIv);
+        【this.enCipher = Cipher.getInstance("DES/CBC/PKCS5Padding");】
+        this.deCipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+        this.enCipher.init(1, key, paramSpec);
+        this.deCipher.init(2, key, paramSpec);
+    }
+
+    public String encrypt64(byte[] data) throws Exception {
+        return Base64.encodeToString(this.enCipher.【doFinal】(data), 0);
+    }
+
+    public byte[] decrypt64(String data) throws Exception {
+        return this.deCipher.doFinal(Base64.decode(data, 0));
+    }
+}
+[✔]
+[✔]
+[✔]
+[✔]

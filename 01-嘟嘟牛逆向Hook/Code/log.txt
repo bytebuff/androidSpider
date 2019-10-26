@@ -1,0 +1,14 @@
+****************************** Hook md5 Start ******************************
+[@]  md5明文 => equtype=ANDROID&loginImei=Android355757010248165&timeStamp=1571988540332&userPwd=666666&username=13298307816&key=sdlkjsdljf0j2fsjk
+[@]  md5明文 => c36caa2c7498d3ca545513c50bc38af0
+****************************** Hook md5 Success ******************************
+****************************** Hook encodeDesMap Start ******************************
+[@]  des明文 => {"equtype":"ANDROID","loginImei":"Android355757010248165","sign":"C36CAA2C7498D3CA545513C50BC38AF0","timeStamp":"1571988540332","userPwd":"666666","username":"13298307816"}
+[@]  desKey => 65102933
+[@]  desIv => 32028092
+[@]  des密文 => NIszaqFPos1vd0pFqKlB42Np5itPxaNH//FDsRnlBfgL4lcVxjXii4v57PmOgVK4Kp+XU5qRn5ZW
+sGXVJgrj+yBucvWPLZiuJTnkpKyqwCTzVKQALUS7b17i37xp1r5Bha5nqRp0Y5Uv5VpsTjh2TC+q
+/oHmOOC2USQ47OHt2R0qORjyJ+7AFqKiMHdJaVC51vpnKejfUSxkzyN3LPkiN60bBqpyg8b/tTOU
+Ruc38Hg=
+
+****************************** Hook encodeDesMap Success ******************************
